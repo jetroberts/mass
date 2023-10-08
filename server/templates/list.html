@@ -1,0 +1,8 @@
+<ul id="list">
+  {% for item in list_items %}
+  <li>
+    {{ item }}
+    <button hx-delete="/delete" name="id" value={{ item.id }}>Remove</button>
+  </li>
+  {% endfor %}
+</ul>

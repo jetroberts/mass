@@ -1,0 +1,8 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+{% include "list.html" %}
+
+<button hx-post="/add" hx-target="#list" hx-swap="outerHTML">Add</button>
+{% endblock %}
