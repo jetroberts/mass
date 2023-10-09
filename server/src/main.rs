@@ -3,13 +3,12 @@ use std::sync::{Arc, RwLock};
 use askama::Template;
 use askama_axum::IntoResponse;
 use axum::{
-    extract::State,
+    extract::{Path, State},
     response::Html,
     routing::{delete, get, post},
-    Json, Router,
+    Router,
 };
 use list::Row;
-use serde::Deserialize;
 use tower::ServiceBuilder;
 use tower_http::trace::TraceLayer;
 
@@ -39,7 +38,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(hello))
         .route("/add", post(add_item))
-        .route("/delete", delete(remove_item))
+        .route("/delete/:id", delete(remove_item))
         .layer(ServiceBuilder::new().layer(TraceLayer::new_for_http()))
         .with_state(app_state);
 
@@ -85,18 +84,7 @@ async fn add_item(State(state): State<AppState>) -> impl IntoResponse {
     Html(l.render().unwrap())
 }
 
-#[derive(Deserialize, Debug)]
-struct Remove {
-    id: i16,
-}
-
-async fn remove_item(
-    State(state): State<AppState>,
-    Json(remove): Json<Remove>,
-) -> impl IntoResponse {
-    println!("{:?}", remove);
-    let id = remove.id;
-
+async fn remove_item(State(state): State<AppState>, Path(id): Path<i16>) -> impl IntoResponse {
     let mut items = state.entries.write().unwrap();
 
     match items.iter().position(|x| x.id == id) {

@@ -1,9 +1,9 @@
 <ul id="list">
   {% for item in list_items %}
-  {% let url = "/delete".to_owned().push_str(item.id) %}
+  {% let url = format!("/delete/{}", item.id) %}
   <li>
     {{ item }}
-    <button hx-delete={{ url }}>Remove</button>
+    <button hx-delete={{ url }} hx-target="#list" hx-swap="outerHTML" )>Remove</button>
   </li>
   {% endfor %}
 </ul>
