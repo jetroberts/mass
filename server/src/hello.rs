@@ -1,11 +1,12 @@
 use askama::Template;
 
-use crate::list::Row;
+use crate::add::Add;
+use crate::list::List;
 
 #[derive(Template)]
 #[template(path = "hello.html")]
-pub struct HelloWorld<'a> {
-    pub title: &'a str,
-    pub name: &'a str,
-    pub list_items: Vec<Row>,
+pub struct HelloWorld {
+    pub title: &'static str,
+    pub list: List,
+    pub add: Add,
 }

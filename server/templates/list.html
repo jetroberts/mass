@@ -2,8 +2,18 @@
   {% for item in list_items %}
   {% let url = format!("/delete/{}", item.id) %}
   <li>
-    {{ item }}
-    <button hx-delete={{ url }} hx-target="#list" hx-swap="outerHTML" )>Remove</button>
+    <p>Weight Type: {{ item.weight_type }}</p>
+    <p>Mass: {{ item.mass }}</p>
+    <p>Reps: {{ item.reps }}</p>
+    <p>Date: {{ item.date.format("%Y-%m-%d %H:%M:%S").to_string() }}</p>
+    <button hx-delete={{ url }} hx-target="#list-container" hx-swap="innerHTML">Remove</button>
   </li>
+
+  {% match err %}
+  {% when Some with (err) %}
+  <p style="color: red;">{{ err }}</p>
+  {% when None%}
+  {% endmatch %}
+
   {% endfor %}
 </ul>
