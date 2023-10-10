@@ -1,12 +1,13 @@
-<ul id="list">
+<ul id="list" class="grid auto-cols-auto auto-rows-auto">
   {% for item in list_items %}
   {% let url = format!("/delete/{}", item.id) %}
-  <li>
+  <li class="flex flex-col gap-2 border-blue-900 border-2 rounded-lg p-6 my-3 max-w-2xl">
     <p>Weight Type: {{ item.weight_type }}</p>
     <p>Mass: {{ item.mass }}</p>
     <p>Reps: {{ item.reps }}</p>
     <p>Date: {{ item.date.format("%Y-%m-%d %H:%M:%S").to_string() }}</p>
-    <button hx-delete={{ url }} hx-target="#list-container" hx-swap="innerHTML">Remove</button>
+    <button class="bg-red-200 rounded-lg p-2 hover:bg-red-400" hx-delete={{ url }} hx-target="#list-container"
+      hx-swap="innerHTML">Remove</button>
   </li>
 
   {% match err %}

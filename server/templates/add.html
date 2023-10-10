@@ -1,16 +1,17 @@
-<form hx-post="/add" hx-target="#list-container" hx-swap="innerHTML" class="bg-red-200 rounded-sm">
-  <label>Weight Type:</label>
-  <select id="weight_type" name="weight_type">
+<form hx-post="/add" hx-target="#list-container" hx-swap="innerHTML"
+  class="flex flex-col gap-1 border-2 border-gray-200 p-2 rounded-lg justify-center items-center">
+  <label class="max-w-sm">Weight Type:</label>
+  <select id="weight_type" name="weight_type" class="border-2 border-gray-100 rounded-lg max-w-sm p-2">
     {% for weight_type in weight_types %}
     <option value="{{ weight_type }}">{{ weight_type }}</option>
     {% endfor %}
   </select>
 
-  <label>Mass:</label>
-  <input type="text" id="mass" name="mass">
+  <label class="max-w-sm">Mass:</label>
+  <input class="border-2 border-gray-100 rounded-lg max-w-sm p-2" type="text" id="mass" name="mass">
 
-  <label>Reps:</label>
-  <input type="text" id="reps" name="reps">
+  <label class="max-w-sm">Reps:</label>
+  <input class="border-2 border-gray-100 rounded-lg max-w-sm p-2" type="text" id="reps" name="reps">
 
-  <button>Add</button>
+  {{ button|safe }}
 </form>

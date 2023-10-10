@@ -15,6 +15,7 @@ use tower::ServiceBuilder;
 use tower_http::{services::ServeDir, trace::TraceLayer};
 
 mod add;
+mod components;
 mod hello;
 mod list;
 
@@ -69,7 +70,9 @@ async fn hello(State(state): State<AppState>) -> impl IntoResponse {
                 String::from("Bench"),
                 String::from("Squat"),
                 String::from("Deadlift"),
+                String::from("Overhead Press"),
             ],
+            button: components::Button,
         },
     };
 
