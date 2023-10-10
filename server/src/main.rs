@@ -12,7 +12,7 @@ use chrono::Utc;
 use list::WeightEntry;
 use serde::Deserialize;
 use tower::ServiceBuilder;
-use tower_http::trace::TraceLayer;
+use tower_http::{services::ServeDir, trace::TraceLayer};
 
 mod add;
 mod hello;
@@ -45,6 +45,7 @@ async fn main() {
         .route("/", get(hello))
         .route("/add", post(add_item))
         .route("/delete/:id", delete(remove_item))
+        .nest_service("/dist", ServeDir::new("dist"))
         .layer(ServiceBuilder::new().layer(TraceLayer::new_for_http()))
         .with_state(app_state);
 
