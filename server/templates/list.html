@@ -1,7 +1,7 @@
-<ul id="list" class="grid auto-cols-auto auto-rows-auto">
+<ul id="list" class="grid grid-cols-5 gap-2">
   {% for item in list_items %}
   {% let url = format!("/delete/{}", item.id) %}
-  <li class="flex flex-col gap-2 border-blue-900 border-2 rounded-lg p-6 my-3 max-w-2xl">
+  <li class="flex flex-col gap-2 border-blue-900 border-2 rounded-lg p-6 my-3 max-w-sm">
     <p>Weight Type: {{ item.weight_type }}</p>
     <p>Mass: {{ item.mass }}</p>
     <p>Reps: {{ item.reps }}</p>
