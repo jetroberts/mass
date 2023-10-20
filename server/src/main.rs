@@ -1,82 +1,35 @@
-use std::sync::{Arc, RwLock};
-
 use askama::Template;
 use askama_axum::IntoResponse;
 use axum::{
     extract::{rejection::FormRejection, Path, State},
     response::Html,
-    routing::{delete, get, post},
-    Form, Router,
 };
 use chrono::Utc;
+use controller::Controller;
+use db::RedisDatabase;
 use list::WeightEntry;
+use processor::Processor;
 use serde::Deserialize;
-use tower::ServiceBuilder;
-use tower_http::{services::ServeDir, trace::TraceLayer};
 
 mod add;
 mod components;
+mod controller;
+mod db;
 mod hello;
 mod list;
-
-#[derive(Clone)]
-pub struct AppState {
-    entries: Arc<RwLock<Vec<list::WeightEntry>>>,
-    latest_id: Arc<RwLock<i16>>,
-}
+mod processor;
 
 #[tokio::main]
 async fn main() {
-    let entries: Vec<list::WeightEntry> = vec![WeightEntry {
-        id: 0,
-        weight_type: String::from("Bench"),
-        mass: 100,
-        reps: 3,
-        date: Utc::now(),
-    }];
+    let redis_db = RedisDatabase::new();
+    let processor = Processor::new(redis_db);
 
-    let app_state = AppState {
-        entries: Arc::new(RwLock::new(entries)),
-        latest_id: Arc::new(RwLock::new(1)),
-    };
-
-    tracing_subscriber::fmt::init();
-
-    let app = Router::new()
-        .route("/", get(hello))
-        .route("/add", post(add_item))
-        .route("/delete/:id", delete(remove_item))
-        .nest_service("/dist", ServeDir::new("dist"))
-        .layer(ServiceBuilder::new().layer(TraceLayer::new_for_http()))
-        .with_state(app_state);
+    let app = Controller::create_app();
 
     axum::Server::bind(&"0.0.0.0:3003".parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();
-}
-
-async fn hello(State(state): State<AppState>) -> impl IntoResponse {
-    let entries = state.entries.read().unwrap();
-
-    let hello = hello::HelloWorld {
-        title: "hello",
-        list: list::List {
-            list_items: entries.to_vec(),
-            err: None,
-        },
-        add: add::Add {
-            weight_types: vec![
-                String::from("Bench"),
-                String::from("Squat"),
-                String::from("Deadlift"),
-                String::from("Overhead Press"),
-            ],
-            button: components::Button,
-        },
-    };
-
-    Html(hello.render().unwrap())
 }
 
 #[derive(Deserialize)]
