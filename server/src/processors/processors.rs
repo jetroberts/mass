@@ -12,11 +12,14 @@ where
         return Processor { database };
     }
 
-    fn create_new(&self) {
+    fn create_new(&mut self) {
         let res = self.database.set_by_key("test", "test");
+        if res.is_err() {
+            println!("Failed to set key");
+        }
     }
 
     fn get_res_by_key(&self, key: String) -> Result<String, &str> {
-        let res = self.database.get_by_key(key);
+        self.database.get_by_key(key)
     }
 }

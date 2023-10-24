@@ -32,7 +32,7 @@ impl Database for RedisDatabase {
         self.connection = Some(connection);
     }
 
-    // should this return an option rather than a result? 
+    // should this return an option rather than a result?
     fn get_by_key(&self, key: String) -> Result<String, &str> {
         let conn = match self.connection {
             Some(ref mut conn) => conn,
